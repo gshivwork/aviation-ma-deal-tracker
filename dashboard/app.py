@@ -5,16 +5,23 @@ investments, and strategic partnerships through a build-vs-buy-vs-partner lens.
 """
 
 import sqlite3
+import sys
 from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from etl.load import run as run_etl
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = PROJECT_ROOT / "data" / "processed" / "deals.db"
+
+# Streamlit Cloud runs this file without the repo root on sys.path, so the
+# `etl` package (which lives at the repo root, not under dashboard/) isn't
+# importable by default. Add it explicitly before importing from etl.
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from etl.load import run as run_etl  # noqa: E402
 
 st.set_page_config(
     page_title="Aviation M&A Deal Tracker",
