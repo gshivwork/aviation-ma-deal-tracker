@@ -10,6 +10,10 @@ Built as a working artifact to demonstrate how a Corporate Development /
 competitive intelligence workflow could be supported by a lightweight,
 reproducible internal tool — not a slide deck.
 
+**🔗 Live demo:** _add your Streamlit Community Cloud URL here once deployed_
+(see [Deploying](#deploying-a-live-version) below — no install needed, filters
+and charts are fully interactive).
+
 ## Why this exists
 
 Corp Dev teams at major airlines track deal flow across competitors and
@@ -85,6 +89,26 @@ Run tests with:
 ```bash
 pytest tests/ -v
 ```
+
+Note: `dashboard/app.py` auto-builds `data/processed/deals.db` from the seed
+CSV on first run if it doesn't exist yet, so `streamlit run dashboard/app.py`
+alone is enough — the explicit `python -m etl.load` step above is there for
+inspecting the pipeline output directly.
+
+## Deploying a live version
+
+For anyone viewing this on GitHub who isn't going to clone and run Python
+locally, deploy it to **[Streamlit Community Cloud](https://share.streamlit.io)**
+(free):
+
+1. Sign in at share.streamlit.io with GitHub.
+2. Click "New app", pick this repo, branch `main`, main file path `dashboard/app.py`.
+3. Click Deploy. Streamlit Cloud installs `requirements.txt` and runs the app;
+   since `data/processed/deals.db` is gitignored (it's derived data), the app
+   builds it automatically from `data/raw/deals_seed.csv` on first load — no
+   extra configuration needed.
+4. You'll get a public URL (e.g. `your-app-name.streamlit.app`). Add it to the
+   "Live demo" link at the top of this README and to your cold outreach email.
 
 ## Dashboard features
 

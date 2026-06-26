@@ -11,6 +11,8 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+from etl.load import run as run_etl
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = PROJECT_ROOT / "data" / "processed" / "deals.db"
 
@@ -31,11 +33,9 @@ def load_deals(db_path: str) -> pd.DataFrame:
 
 
 if not DB_PATH.exists():
-    st.error(
-        "No database found. Run `python -m etl.load` from the project root "
-        "to build data/processed/deals.db before launching the dashboard."
-    )
-    st.stop()
+    # First run on a fresh clone or a fresh Streamlit Cloud deploy: the SQLite
+    # file is gitignored (it's derived data), so build it from the seed CSV.
+    run_etl()
 
 df = load_deals(str(DB_PATH))
 
