@@ -80,6 +80,14 @@ bbp = st.sidebar.multiselect(
     default=sorted(df["build_buy_partner"].unique()),
 )
 
+all_companies = sorted(set(df["acquirer"]) | set(df["target_or_partner"]))
+selected_companies = st.sidebar.multiselect(
+    "Company name",
+    all_companies,
+    default=[],
+    help="Matches a deal if the company appears as either the acquirer or the target/partner. Leave empty to include all.",
+)
+
 mask = (
     df["announced_year"].between(year_range[0], year_range[1])
     & df["deal_type"].isin(deal_types)
@@ -87,6 +95,8 @@ mask = (
     & df["capability_area"].isin(capability_areas)
     & df["build_buy_partner"].isin(bbp)
 )
+if selected_companies:
+    mask &= df["acquirer"].isin(selected_companies) | df["target_or_partner"].isin(selected_companies)
 filtered = df[mask].sort_values("announced_date", ascending=False)
 
 # ---------------------------------------------------------------------------
